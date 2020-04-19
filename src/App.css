@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+/* base: */
+
+/* common: */
+
+/* layout: */
+
+/* modules: */
+.m-issue {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.m-issue .l-delete {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+}
+.m-issue-description {
+  font-size: 18px;
+  font-weight: 600;
+  color: indigo;
+}
+.m-issue-metadata {
+  background-color: aliceblue;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.m-project {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.m-project .l-delete {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.m-project-description {
+  font-size: 18px;
+  font-weight: 600;
+  color: indigo;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.m-title {
+  position: relative;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.m-title:after {
+  position: absolute;
+  bottom: -10px;
+  content: "";
+  left: 0;
+  height: 4px;
+  width: 120px;
+  background-color: #dc3545;
 }
 
-.App-link {
-  color: #61dafb;
+.m-required:after {
+  content: "*";
+  color: rgb(241, 43, 43);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@media only screen and (min-width: 576px) {
+}
+
+@media only screen and (min-width: 992px) {
+}
+
+@media only screen and (min-width: 992px) {
+}
+
+@media only screen and (min-width: 1200px) {
 }
