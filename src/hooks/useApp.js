@@ -12,12 +12,12 @@ const useApp = () => {
 
   const userLoggedIn = (data) => {
     dispatch({ type: USER_LOGGED_IN, payload: data });
-    localStorage.setItem("token", data.token);
+    localStorage.setItem("bugtrackertoken", data.token);
   };
 
   const userLoggedOut = () => {
     dispatch({ type: USER_LOGGED_OUT });
-    localStorage.removeItem("token");
+    localStorage.removeItem("bugtrackertoken");
   };
 
   const updateUser = (userData) => {
