@@ -9,6 +9,9 @@ const GET_FILTER_ISSUES = gql`
     $assignedToId: String
     $projectId: String
     $orderBy: IssueOrderByInput
+    $first: Int
+    $skip: Int
+    $after: String
   ) {
     issuesByFilter(
       filter: {
@@ -20,6 +23,9 @@ const GET_FILTER_ISSUES = gql`
         projectId: $projectId
       }
       orderBy: $orderBy
+      first: $first
+      skip: $skip
+      after: $after
     ) {
       id
       title
@@ -41,18 +47,23 @@ const GET_FILTER_ISSUES = gql`
 `;
 
 const useIssuesByFilter = (issuesFilter) => {
-  const { loading, error, data, refetch } = useQuery(GET_FILTER_ISSUES, {
-    variables: {
-      ...issuesFilter,
-      orderBy: "updatedAt_DESC",
-    },
-  });
+  const { loading, error, data, refetch, fetchMore } = useQuery(
+    GET_FILTER_ISSUES,
+    {
+      variables: {
+        ...issuesFilter,
+        orderBy: "updatedAt_DESC",
+      },
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   return {
     loading,
     error,
     data,
     refetch,
+    fetchMore,
   };
 };
 
