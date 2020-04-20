@@ -17,7 +17,7 @@ import IssuesPage from "./components/pages/IssuesPage";
 import IssueDetailsPage from "./components/pages/IssueDetailsPage";
 import AddIssuePage from "./components/pages/AddIssuePage";
 import { useApp } from "./hooks/useApp";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./css/bootstrap.flatly.min.css";
 import "./App.css";
 import client from "./apollo-client";
 
