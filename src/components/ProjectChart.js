@@ -58,7 +58,7 @@ const ProjectChart = ({ id, name }) => {
 
   return (
     <div className="mb-5">
-      <h3>{name}</h3>
+      <h2>{name}</h2>
       <div className="d-md-flex">
         <Chart
           options={options}

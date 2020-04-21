@@ -1,13 +1,24 @@
 import React, { useEffect } from "react";
 import { useProjects } from "../hooks/useProjects";
 import ProjectChart from "./ProjectChart";
+import HerokuSlowInitLoad from "./messages/HerokuSlowInitLoad";
 
 const HomeCharts = () => {
-  const { data: projectsData, refetch: projectsRefetch } = useProjects();
+  const {
+    loading,
+    error,
+    data: projectsData,
+    refetch: projectsRefetch,
+  } = useProjects();
 
   useEffect(() => {
     projectsRefetch();
   }, []);
+
+  if (loading) {
+    return <HerokuSlowInitLoad />;
+  }
+  if (error) return `Error! ${error.message}`;
 
   const projectsCharts =
     projectsData &&
