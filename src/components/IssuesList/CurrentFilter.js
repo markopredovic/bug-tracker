@@ -4,6 +4,7 @@ import { FaTimes } from "react-icons/fa";
 
 const CurrentFilter = ({ filter, getFilter }) => {
   const resetFilterField = (field) => {
+    console.log("reset filter", filter);
     if (field === "query") {
       getFilter({ ...filter, query: "" });
     }

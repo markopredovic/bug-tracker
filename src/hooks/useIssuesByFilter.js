@@ -46,7 +46,7 @@ const GET_FILTER_ISSUES = gql`
   }
 `;
 
-const useIssuesByFilter = (issuesFilter) => {
+const useIssuesByFilter = (issuesFilter, cb) => {
   const { loading, error, data, refetch, fetchMore } = useQuery(
     GET_FILTER_ISSUES,
     {
@@ -55,6 +55,8 @@ const useIssuesByFilter = (issuesFilter) => {
         orderBy: "updatedAt_DESC",
       },
       fetchPolicy: "cache-and-network",
+      partialRefetch: true,
+      onCompleted: cb,
     }
   );
 

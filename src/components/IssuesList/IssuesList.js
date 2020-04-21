@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import Issue from "./Issue";
 import { FaSlidersH, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { useIssuesByFilter } from "../../hooks/useIssuesByFilter";
+import { useTotalIssuesByFilter } from "../../hooks/useTotalIssuesByFilter";
 import { useDeleteIssue } from "../../hooks/useDeleteIssue";
 import IssuesFilter from "./IssuesFilter";
 import CurrentFilter from "./CurrentFilter";
@@ -23,26 +24,34 @@ const initialFilterValues = {
 
 const IssuesList = () => {
   const cursorRef = useRef(0);
+  const [showPagination, setShowPagination] = useState(false);
   const [isNextDisabled, setNextDisabled] = useState(false);
   const [isPreviousDisabled, setPreviousDisabled] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
   const [issuesFilter, setIssuesFilter] = useState(initialFilterValues);
   const [isIssueDeleted, setIsIssueDeleted] = useState(false);
+  const onCompletedCb = (data) => {
+    setShowPagination(
+      totalIssuesCount && totalIssuesCount.totalIssuesByFilter.total > 10
+    );
+  };
   const { loading, error, data, refetch, fetchMore } = useIssuesByFilter(
-    issuesFilter
+    issuesFilter,
+    onCompletedCb
   );
+  const { data: totalIssuesCount } = useTotalIssuesByFilter(issuesFilter);
   const { deleteIssue } = useDeleteIssue();
 
   const isMobile = useMedia({ maxWidth: 991 });
 
   useEffect(() => {
-    setIsIssueDeleted(false);
-    refetch(issuesFilter);
-  }, [issuesFilter, refetch]);
+    if (isIssueDeleted) refetch();
+  }, [isIssueDeleted]);
 
   useEffect(() => {
-    if (isIssueDeleted) refetch();
-  }, [isIssueDeleted, refetch]);
+    setIsIssueDeleted(false);
+    refetch(issuesFilter);
+  }, [issuesFilter]);
 
   const handleDeleteIssue = async (id) => {
     setIsIssueDeleted(false);
@@ -61,21 +70,14 @@ const IssuesList = () => {
     setShowFilter(false);
   };
 
-  let paginationDisable = false;
-
-  useEffect(() => {
-    paginationDisable =
-      data && data.issuesByFilter.length < initialFilterValues.first;
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return `Error! ${error.message}`;
-
   const issuesList =
     data &&
     data.issuesByFilter.map((issue) => (
       <Issue key={issue.id} {...issue} removeIssue={handleDeleteIssue} />
     ));
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return `Error! ${error.message}`;
 
   const handleClose = () => setShowFilter(false);
 
@@ -88,7 +90,7 @@ const IssuesList = () => {
       updateQuery: (prev, { fetchMoreResult }) => {
         if (
           fetchMoreResult.issuesByFilter.length > 0 &&
-          fetchMoreResult.issuesByFilter.length < 10
+          fetchMoreResult.issuesByFilter.length <= 10
         ) {
           setNextDisabled(true);
           setPreviousDisabled(false);
@@ -142,7 +144,7 @@ const IssuesList = () => {
         {data && data.issuesByFilter.length > 0
           ? issuesList
           : "No issues in database"}
-        {!paginationDisable && (
+        {showPagination && (
           <div className="d-flex justify-content-end mt-4">
             <Button
               onClick={handleFetchPrevious}

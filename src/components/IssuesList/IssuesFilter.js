@@ -35,6 +35,8 @@ const IssuesFilter = ({ getFilter, issuesFilter }) => {
           (project) => project.id === data.projectId
         )[0].name
       : "";
+    filterObj.first = data.first;
+    filterObj.skip = data.skip;
 
     getFilter(filterObj);
   };
