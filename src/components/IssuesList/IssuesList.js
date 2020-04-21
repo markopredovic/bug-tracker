@@ -1,12 +1,13 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
 import Issue from "./Issue";
-import { FaSlidersH, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaSlidersH } from "react-icons/fa";
 import { useIssuesByFilter } from "../../hooks/useIssuesByFilter";
 import { useTotalIssuesByFilter } from "../../hooks/useTotalIssuesByFilter";
 import { useDeleteIssue } from "../../hooks/useDeleteIssue";
 import IssuesFilter from "./IssuesFilter";
 import CurrentFilter from "./CurrentFilter";
+import IssuesPagination from "./IssuesPagination";
 import useMedia from "use-media";
 
 const initialFilterValues = {
@@ -18,39 +19,46 @@ const initialFilterValues = {
   orderBy: "updatedAt_DESC",
   assignedTo: "",
   project: "",
-  first: 10,
+  first: 5,
   skip: 0,
 };
 
 const IssuesList = () => {
-  const cursorRef = useRef(0);
   const [showPagination, setShowPagination] = useState(false);
-  const [isNextDisabled, setNextDisabled] = useState(false);
-  const [isPreviousDisabled, setPreviousDisabled] = useState(true);
+  const [active, setActive] = useState(1);
   const [showFilter, setShowFilter] = useState(false);
   const [issuesFilter, setIssuesFilter] = useState(initialFilterValues);
   const [isIssueDeleted, setIsIssueDeleted] = useState(false);
   const onCompletedCb = (data) => {
     setShowPagination(
-      totalIssuesCount && totalIssuesCount.totalIssuesByFilter.total > 10
+      totalIssuesData && totalIssuesData.totalIssuesByFilter.total > 4
     );
   };
   const { loading, error, data, refetch, fetchMore } = useIssuesByFilter(
     issuesFilter,
     onCompletedCb
   );
-  const { data: totalIssuesCount } = useTotalIssuesByFilter(issuesFilter);
+  const {
+    data: totalIssuesData,
+    refetch: totalRefetch,
+  } = useTotalIssuesByFilter(issuesFilter);
   const { deleteIssue } = useDeleteIssue();
 
   const isMobile = useMedia({ maxWidth: 991 });
 
   useEffect(() => {
-    if (isIssueDeleted) refetch();
+    if (isIssueDeleted) {
+      refetch();
+      totalRefetch();
+      setActive(1);
+    }
   }, [isIssueDeleted]);
 
   useEffect(() => {
     setIsIssueDeleted(false);
     refetch(issuesFilter);
+    totalRefetch(issuesFilter);
+    setActive(1);
   }, [issuesFilter]);
 
   const handleDeleteIssue = async (id) => {
@@ -81,42 +89,14 @@ const IssuesList = () => {
 
   const handleClose = () => setShowFilter(false);
 
-  const handleFetchNext = () => {
-    cursorRef.current += 1;
+  const handlePaginationItemClicked = (pageNumber) => {
+    setActive(pageNumber);
+    const _skip = initialFilterValues.first * (pageNumber - 1);
     fetchMore({
       variables: {
-        skip: 10 * cursorRef.current,
+        skip: _skip,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (
-          fetchMoreResult.issuesByFilter.length > 0 &&
-          fetchMoreResult.issuesByFilter.length <= 10
-        ) {
-          setNextDisabled(true);
-          setPreviousDisabled(false);
-          return fetchMoreResult;
-        } else if (fetchMoreResult.issuesByFilter.length === 0) {
-          return prev.issuesByFilter;
-        }
-
-        setPreviousDisabled(false);
-        return fetchMoreResult;
-      },
-    });
-  };
-
-  const handleFetchPrevious = () => {
-    cursorRef.current -= 1;
-    cursorRef.current = cursorRef.current < 0 ? 0 : cursorRef.current;
-    fetchMore({
-      variables: {
-        skip: 10 * cursorRef.current,
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        setNextDisabled(false);
-        if (cursorRef.current === 0) {
-          setPreviousDisabled(true);
-        }
         return fetchMoreResult;
       },
     });
@@ -145,23 +125,15 @@ const IssuesList = () => {
           ? issuesList
           : "No issues in database"}
         {showPagination && (
-          <div className="d-flex justify-content-end mt-4">
-            <Button
-              onClick={handleFetchPrevious}
-              style={{ fontSize: "24px" }}
-              disabled={isPreviousDisabled}
-              className="mr-2 d-flex align-items-center"
-            >
-              <FaChevronLeft />
-            </Button>
-            <Button
-              onClick={handleFetchNext}
-              style={{ fontSize: "24px" }}
-              disabled={isNextDisabled}
-              className="d-flex align-items-center"
-            >
-              <FaChevronRight />
-            </Button>
+          <div className="d-flex justify-content-center mt-4">
+            <IssuesPagination
+              total={
+                totalIssuesData && totalIssuesData.totalIssuesByFilter.total
+              }
+              perPage={initialFilterValues.first}
+              active={active}
+              fetchPageData={handlePaginationItemClicked}
+            />
           </div>
         )}
       </div>
