@@ -115,7 +115,6 @@ const ProjectDetails = ({ id }) => {
   };
 
   const handleLoadMore = async () => {
-    console.log("load more ...");
     setMoreLoading(true);
     fetchMoreCounterRef.current += 1;
 

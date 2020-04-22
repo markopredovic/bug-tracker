@@ -7,7 +7,11 @@ import { useUpdateProject } from "../../hooks/useUpdateProject";
 
 const AddTeamMemberForm = ({ projectId, submitForm, closeForm }) => {
   const { data } = useUsers();
-  const { data: projectData } = useProjectDetails(projectId, "updatedAt_DESC");
+  const { data: projectData } = useProjectDetails(
+    projectId,
+    null,
+    "updatedAt_DESC"
+  );
   const [teamData, , handleChange] = useForm({ ids: [] });
   const { updateProject } = useUpdateProject();
   const [adding, setAdding] = useState(false);
@@ -25,6 +29,10 @@ const AddTeamMemberForm = ({ projectId, submitForm, closeForm }) => {
           {user.name}
         </option>
       ));
+
+  console.log("team", team);
+
+  if (team && team.length === 0) return "There are no available users";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
