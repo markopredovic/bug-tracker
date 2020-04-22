@@ -1,15 +1,17 @@
 import React from "react";
 import { Alert } from "react-bootstrap";
-import { FaSmileWink } from "react-icons/fa";
+import { Spinner } from "react-bootstrap";
 
 const HerokuSlowInitLoad = () => {
   return (
     <div>
-      <Alert variant="info">
-        <span className="mr-2">
-          Wait for initial slow loading from free Heroku server
+      <Alert variant="info" className="d-flex align-items-center">
+        <span className="mr-4">
+          Please wait for initial slow loading from Heroku free account server
         </span>
-        <FaSmileWink style={{ fontSize: "18px", color: "#F39C12" }} />
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
       </Alert>
     </div>
   );
