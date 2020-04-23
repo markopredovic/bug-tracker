@@ -6,8 +6,8 @@ const HerokuSlowInitLoad = () => {
   return (
     <div>
       <Alert variant="info" className="d-flex align-items-center">
-        <span className="mr-4">
-          Please wait for initial slow loading from Heroku free account server
+        <span className="mr-3">
+          Please wait for initial connect to Heroku free account server (~20s)
         </span>
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>

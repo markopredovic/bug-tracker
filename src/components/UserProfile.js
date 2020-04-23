@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { Button, Modal, Form } from "react-bootstrap";
 import AppContext from "../context/appContext";
+import UserIssuesChart from "./UserIssuesChart";
 
 const UserProfile = () => {
   const context = useContext(AppContext);
@@ -82,7 +83,7 @@ const UserProfile = () => {
 
   return (
     <Fragment>
-      <div>
+      <div className="pt-2">
         <p>
           <span className="mr-2">
             <FaUser />
@@ -102,7 +103,7 @@ const UserProfile = () => {
           {data.me.email}
         </p>
       </div>
-      <div>
+      <div className="mb-5">
         <Button variant="warning" className="mr-3" onClick={handleEdit}>
           <FaEdit /> Edit
         </Button>
@@ -110,6 +111,7 @@ const UserProfile = () => {
           <FaTrash /> {deletingUser ? "Deleting..." : "Delete"}
         </Button>
       </div>
+      <UserIssuesChart />
       <Modal show={showEdit} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Edit user</Modal.Title>
