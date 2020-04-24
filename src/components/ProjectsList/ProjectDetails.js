@@ -37,6 +37,10 @@ const ProjectDetails = ({ id }) => {
     status: issueStatus,
     projectId: id,
   });
+  const { data: allTotalIssuesData } = useTotalIssuesByFilter({
+    status: null,
+    projectId: id,
+  });
 
   const deleteTeamUserIdRef = useRef(null);
   const fetchMoreCounterRef = useRef(0);
@@ -159,9 +163,9 @@ const ProjectDetails = ({ id }) => {
             </span>
           </div>
           <div>
-            {totalIssuesData &&
-            totalIssuesData.totalIssuesByFilter.total > 0 ? (
-              <div className="mb-3 d-flex align-items-center justify-content-between">
+            {allTotalIssuesData &&
+            allTotalIssuesData.totalIssuesByFilter.total > 0 ? (
+              <div className="mb-3 d-block d-sm-flex align-items-center justify-content-between">
                 <h4>Issues:</h4>
                 <ToggleButtonGroup
                   type="radio"

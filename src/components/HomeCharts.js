@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useProjects } from "../hooks/useProjects";
 import ProjectChart from "./ProjectChart";
-import HerokuSlowInitLoad from "./messages/HerokuSlowInitLoad";
+import { Spinner } from "react-bootstrap";
 
 const HomeCharts = () => {
   const {
@@ -16,7 +16,14 @@ const HomeCharts = () => {
   }, []);
 
   if (loading) {
-    return <HerokuSlowInitLoad />;
+    return (
+      <div className="l-loading m-loading">
+        <span className="mr-2">Connecting to app server...</span>
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
+    );
   }
   if (error) return `Error! ${error.message}`;
 
