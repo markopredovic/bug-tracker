@@ -18,7 +18,9 @@ const HomeCharts = () => {
   if (loading) {
     return (
       <div className="l-loading m-loading">
-        <span className="mr-2">Connecting to app server...</span>
+        <span className="mr-2">
+          Please wait for initial connect to free heroku server
+        </span>
         <Spinner animation="border" role="status">
           <span className="sr-only">Loading...</span>
         </Spinner>
